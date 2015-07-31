@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
 	MsgOutput* msgOutput = nullptr;
 
 	thread msgOutputThread([&](){
-		msgOutput = new MsgOutput(msgQueue);
+		msgOutput = new MsgOutput(argv[1], msgQueue);
 		msgOutput->operator()();
 	});
 

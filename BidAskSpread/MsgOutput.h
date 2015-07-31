@@ -12,12 +12,14 @@ using namespace std;
 
 class MsgOutput: public Callable{
 public:
-	MsgOutput(MsgQueue* msg): m_msgQueue(msg)
+	MsgOutput(const string filepath, MsgQueue* msg):
+		m_msgQueue(msg), m_filepath(filepath)
 	{
 		printTable();
 	}
 
 private:
+	const string m_filepath;
 	MsgQueue* m_msgQueue;
 	map<Sender, string> m_table;
 
@@ -35,6 +37,7 @@ private:
 	void printTable(){
 		ClearScreen();
 		cout << "Bid-Ask Spread Processor" << endl
+			 << "Processing file: " << m_filepath << endl
 			 << "--------------------------------------------------" << endl << endl;
 		for(auto const &line : m_table){
 			cout << senderString[line.first] << ": " << line.second << endl << endl;
