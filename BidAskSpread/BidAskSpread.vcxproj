@@ -161,7 +161,6 @@
     <ClInclude Include="ClearScreen.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="DayRelSpreadProcessor.h" />
-    <ClInclude Include="MemoryMappedIterator.h" />
     <ClInclude Include="MsgOutput.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="StatsUtils.h" />

@@ -77,9 +77,6 @@
     <ClInclude Include="StatsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryMappedIterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
