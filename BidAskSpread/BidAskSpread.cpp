@@ -57,47 +57,35 @@ int main(int argc, char* argv[]){
 		Parser(string(argv[1]), parsedQueue, msgQueue)();
 	}));
 
-	//threads.push_back(thread([&](){
-	//	TimestampMergeFilter(parsedQueue, timestampMergedQueue, msgQueue)();
-	//	cout << "TimestampMergeFilter finished" << endl;
-	//}));
+	threads.push_back(thread([&](){
+		TimestampMergeFilter(parsedQueue, timestampMergedQueue, msgQueue)();
+		cout << "TimestampMergeFilter finished" << endl;
+	}));
 
-	//threads.push_back(thread([&](){
-	//	OutliersFilter(timestampMergedQueue, outliersFilteredQueue, msgQueue)();
-	//	cout << "OutliersFilter finished" << endl;
-	//}));
+	threads.push_back(thread([&](){
+		OutliersFilter(timestampMergedQueue, outliersFilteredQueue, msgQueue)();
+		cout << "OutliersFilter finished" << endl;
+	}));
 
-	//threads.push_back(thread([&](){
-	//	RelSpreadProcessor(outliersFilteredQueue, relSpreadQueue, msgQueue)();
-	//	cout << "RelSpreadProcessor finished" << endl;
-	//}));
+	threads.push_back(thread([&](){
+		RelSpreadProcessor(outliersFilteredQueue, relSpreadQueue, msgQueue)();
+		cout << "RelSpreadProcessor finished" << endl;
+	}));
 
-	//threads.push_back(thread([&](){
-	//	DayRelSpreadProcessor(relSpreadQueue, dayRelSpreadQueue, msgQueue)();
-	//	cout << "DayRelSpreadProcessor finished" << endl;
-	//}));
+	threads.push_back(thread([&](){
+		DayRelSpreadProcessor(relSpreadQueue, dayRelSpreadQueue, msgQueue)();
+		cout << "DayRelSpreadProcessor finished" << endl;
+	}));
 
-	//threads.push_back(thread([&](){
-	//	OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue)();
-	//	cout << "OutputWriter finished" << endl;
-	//}));
-
-	//threads.push_back(thread([&](){
-	//	try{
-	//		while(true)
-	//			parsedQueue->dequeue().deleteAll();
-	//	} catch(AtomicQueue<Observation>::QueueEndException&){}
-	//}));
+	threads.push_back(thread([&](){
+		OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue)();
+		cout << "OutputWriter finished" << endl;
+	}));
 
 	for_each(threads.begin(), threads.end(), [](thread& t){
 		if(t.joinable())
 			t.join();
 	});
-
-	try{
-		while(true)
-			parsedQueue->dequeue().deleteAll();
-	} catch(AtomicQueue<Observation>::QueueEndException&){}
 
 	cout << "Finished !" << endl;
 
