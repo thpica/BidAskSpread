@@ -5,7 +5,14 @@ Filter(in, out, msg)
 {}
 
 void TimestampMergeFilter::filter(){
-	//start output thread
+	Counter counter;
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
+		if(m_inputQueue->empty()) msg += "\tstarving!";
+		if(m_outputQueue->full()) msg += "\tblocked!";
+		m_msgQueue->enqueue(Message(TIMESTAMP_MERGE_FILTER, msg));
+	});
+	counter.start();
 
 	try{
 		while(true){
@@ -18,6 +25,7 @@ void TimestampMergeFilter::filter(){
 				} else{
 					m_outputQueue->enqueue(getMergedObs());
 					m_buffer.clear();
+					counter.tick();
 					m_buffer.push_front(obs);
 				}
 			}
@@ -25,9 +33,11 @@ void TimestampMergeFilter::filter(){
 	} catch(ObsQueue::QueueEndException&){
 		if(!m_buffer.empty()){
 			m_outputQueue->enqueue(getMergedObs());
+			counter.stop();
 			m_buffer.clear();
 		}
 		m_outputQueue->setQueueEnd();
+		m_msgQueue->enqueue(Message(TIMESTAMP_MERGE_FILTER, "Finished !"));
 	}
 }
 

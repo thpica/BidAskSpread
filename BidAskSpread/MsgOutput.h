@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <thread>
 #include "Callable.h"
 #include "DataStructures.h"
 #include "ClearScreen.h"
@@ -27,7 +28,7 @@ private:
 				m_table[msg.sender] = msg.text;
 				printTable();
 			} else
-				Sleep(25);
+				this_thread::yield();
 		}
 	}
 

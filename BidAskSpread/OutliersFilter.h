@@ -9,6 +9,7 @@ using namespace std;
 
 #include "Filter.h"
 #include "StatsUtils.h"
+#include "Counter.h"
 
 class OutliersFilter: public Filter{
 public:
@@ -49,7 +50,7 @@ public:
 
 private:
 	vector<Observation> m_buffer;
-	void removeDayOutliers();
+	void removeDayOutliers(Counter& counter);
 	virtual void filter();
 	Stats computeContextStats(Interval window);
 };

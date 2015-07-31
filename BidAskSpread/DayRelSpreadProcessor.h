@@ -4,6 +4,7 @@
 #include "DataStructures.h"
 #include "StatsUtils.h"
 using namespace StatsUtils;
+#include "Counter.h"
 
 class DayRelSpreadProcessor: public Callable
 {

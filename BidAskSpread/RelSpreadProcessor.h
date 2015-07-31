@@ -5,6 +5,7 @@
 
 #include "DataStructures.h"
 #include "Filter.h"
+#include "Counter.h"
 
 using namespace std;
 

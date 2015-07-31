@@ -52,7 +52,6 @@ private:
 	MemoryMappedHelper m_mappedHelper;
 	ObsQueue* m_queue;
 	MsgQueue* m_msgQueue;
-	Counter m_counter;
 	const string m_filepath;
 	virtual void run();
 	void parse();

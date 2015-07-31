@@ -34,7 +34,7 @@ void Counter::stop(){
 	m_running = false;
 }
 
-void Counter::tick(uint64_t tickCount){
+void Counter::ticks(uint64_t tickCount){
 	m_perSecTickCount += tickCount;
 	m_totalTickCount += tickCount;
 }

@@ -8,6 +8,7 @@
 
 #include "Filter.h"
 #include "StatsUtils.h"
+#include "Counter.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ public:
 
 private:
 	forward_list<Observation> m_buffer;
+
 	virtual void filter();
 	Observation getMergedObs();
 };

@@ -5,21 +5,18 @@ DayRelSpreadProcessor::DayRelSpreadProcessor(ObsQueue* inputQueue, SprdQueue* ou
 m_inputQueue(inputQueue), m_outputQueue(outputQueue), m_msgQueue(msgQueue)
 {}
 
-void DayRelSpreadProcessor::pollDayObs(){
+void DayRelSpreadProcessor::pollDayObs(){ //throws QueueEndException
 	Observation obs;
-	while(!m_inputQueue->end()){
-		if(m_inputQueue->empty()){
-			Sleep(25);
+
+	while(true){
+		if(m_buffer.empty()){
+			obs = m_inputQueue->dequeue();
+			m_buffer.push_back(obs);
+		} else if(*m_buffer.back().date == *m_inputQueue->peek()->date){
+			obs = m_inputQueue->dequeue();
+			m_buffer.push_back(obs);
 		} else{
-			if(m_buffer.empty()){
-				obs = m_inputQueue->dequeue();
-				m_buffer.push_back(obs);
-			} else if(*m_buffer.back().date == *m_inputQueue->peek()->date){
-				obs = m_inputQueue->dequeue();
-				m_buffer.push_back(obs);
-			} else{
-				break;
-			}
+			break;
 		}
 	}
 }
@@ -34,18 +31,39 @@ void DayRelSpreadProcessor::cleanBuffer(){
 }
 
 void DayRelSpreadProcessor::process(){
-	while(!m_inputQueue->end()){
-		pollDayObs();
+	Counter counter;
+
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
+		if(m_inputQueue->empty()) msg += "\tstarving!";
+		if(m_outputQueue->full()) msg += "\tblocked!";
+		m_msgQueue->enqueue(Message(DAY_RELSPREAD_PROCESSOR, msg));
+	});
+	counter.start();
+
+	try{
+		while(true){
+			pollDayObs();
+			if(!m_buffer.empty()){
+				m_outputQueue->enqueue(
+					DaySpread(m_buffer[0].symbol,
+					m_buffer[0].date,
+					mean(m_buffer)
+					)
+					);
+				counter.tick();
+				cleanBuffer();
+			}
+		}
+	} catch(ObsQueue::QueueEndException&){
 		if(!m_buffer.empty()){
-			m_outputQueue->enqueue(
-				DaySpread(m_buffer[0].symbol,
-						  m_buffer[0].date,
-						  mean(m_buffer)
-				         )
-				);
+			m_outputQueue->enqueue(DaySpread(m_buffer[0].symbol, m_buffer[0].date,	mean(m_buffer)));
+			counter.tick();
 			cleanBuffer();
 		}
+		m_outputQueue->setQueueEnd();
+		counter.stop();
+		m_msgQueue->enqueue(Message(DAY_RELSPREAD_PROCESSOR, "Finished !"));
 	}
-	m_outputQueue->setQueueEnd();
 }
 

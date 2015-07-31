@@ -10,10 +10,17 @@ inline void RelSpreadProcessor::run(){
 }
 
 inline void RelSpreadProcessor::filter(){
-	while(!m_inputQueue->end()){
-		if(m_inputQueue->empty()){
-			Sleep(25);
-		} else{
+	Counter counter;
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
+		if(m_inputQueue->empty()) msg += "\tstarving!";
+		if(m_outputQueue->full()) msg += "\tblocked!";
+		m_msgQueue->enqueue(Message(RELSPREAD_PROCESSOR, msg));
+	});
+	counter.start();
+
+	try{
+		while(true){
 			long double* relSpread = nullptr;
 			Observation obs = m_inputQueue->dequeue(); //poll obs
 
@@ -21,11 +28,15 @@ inline void RelSpreadProcessor::filter(){
 			if(*relSpread >= 0){
 				obs.relSpread = relSpread;
 				m_outputQueue->enqueue(move(obs));
+				counter.tick();
 			} else{
 				obs.deleteAll();
 				delete relSpread; relSpread = nullptr;
 			}
 		}
+	} catch(ObsQueue::QueueEndException&){
+		counter.stop();
+		m_outputQueue->setQueueEnd();
+		m_msgQueue->enqueue(Message(RELSPREAD_PROCESSOR, "Finished !"));
 	}
-	m_outputQueue->setQueueEnd();
 }

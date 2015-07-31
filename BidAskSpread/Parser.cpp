@@ -21,7 +21,6 @@ Parser& Parser::operator=(Parser&& other){
 void Parser::run(){
 	try{
 		m_mappedHelper.open(m_filepath);
-		m_counter.start();
 		parse();
 	} catch(exception& e){
 		m_queue->setQueueEnd();
@@ -30,14 +29,16 @@ void Parser::run(){
 }
 
 void Parser::parse(){
+	Counter counter;
 	Line line;
 	uint64_t lineNumber = 1;
 
-	m_counter.registerCallback([&](uint64_t countPerSec){
-		string msg = "Parsing at " + to_string(countPerSec) + " line/s";
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
 		if(m_queue->full()) msg += "\tblocked!";
 		m_msgQueue->enqueue(Message(PARSER, msg));
 	});
+	counter.start();
 
 	try{
 		if(*m_mappedHelper.seek(30) == '\n') //skip first line (headers)
@@ -123,10 +124,11 @@ void Parser::parse(){
 			}
 			line.clear();
 			lineNumber++;
-			m_counter.tick();
+			counter.tick();
 		}
 	} catch(std::out_of_range&){
 		m_queue->setQueueEnd();
-		m_msgQueue->enqueue(Message(PARSER, "Parser finished !"));
+		counter.stop();
+		m_msgQueue->enqueue(Message(PARSER, "Finished !"));
 	}
 }

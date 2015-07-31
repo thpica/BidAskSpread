@@ -59,12 +59,10 @@ int main(int argc, char* argv[]){
 
 	threads.push_back(thread([&](){
 		TimestampMergeFilter(parsedQueue, timestampMergedQueue, msgQueue)();
-		cout << "TimestampMergeFilter finished" << endl;
 	}));
 
 	threads.push_back(thread([&](){
 		OutliersFilter(timestampMergedQueue, outliersFilteredQueue, msgQueue)();
-		cout << "OutliersFilter finished" << endl;
 	}));
 
 	threads.push_back(thread([&](){
@@ -78,7 +76,7 @@ int main(int argc, char* argv[]){
 	}));
 
 	threads.push_back(thread([&](){
-		OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue)();
+		OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue, msgQueue)();
 		cout << "OutputWriter finished" << endl;
 	}));
 

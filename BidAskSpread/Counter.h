@@ -16,7 +16,8 @@ public:
 	~Counter();
 	void start();
 	void stop();
-	void tick(uint64_t count = 1);
+	void tick(){ ticks(1); }
+	void ticks(uint64_t count);
 	uint64_t getTotalTickCount();
 	uint64_t getTickPerSecCount();
 	void registerCallback(function<void(uint64_t)> callback);

@@ -5,6 +5,7 @@
 #include <fstream>
 #include "Callable.h"
 #include "DataStructures.h"
+#include "Counter.h"
 
 using namespace std;
 
@@ -12,9 +13,10 @@ template<typename T>
 class OutputWriter: public Callable{
 public:
 
-	OutputWriter(string path, AtomicQueue<T>* in):
+	OutputWriter(string path, AtomicQueue<T>* in, MsgQueue* msgQueue):
 		m_filepath(path),
-		m_inputQueue(in)
+		m_inputQueue(in),
+		m_msgQueue(msgQueue)
 	{}
 
 	virtual ~OutputWriter(){ m_ofs.close(); }
@@ -26,7 +28,7 @@ public:
 private:
 	const string m_filepath;
 	AtomicQueue<T>* m_inputQueue;
-	MsgQueue m_msgQueue;
+	MsgQueue* m_msgQueue;
 	ofstream m_ofs;
 
 	virtual void run(){
@@ -45,23 +47,41 @@ private:
 //template specializations
 template<>
 void OutputWriter<DaySpread>::save(){
-	while(!m_inputQueue->end()){
-		if(m_inputQueue->empty()){
-			Sleep(25);
-		} else{
+	Counter counter;
+
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
+		if(m_inputQueue->empty()) msg += "\tstarving!";
+		m_msgQueue->enqueue(Message(OUTPUT_WRITER, msg));
+	});
+	counter.start();
+
+	try{
+		while(true){
 			DaySpread ds = m_inputQueue->dequeue();
 			m_ofs << *ds.symbol << "," << *ds.date << "," << *ds.relSpread << endl;
 			ds.deleteAll();
+			counter.tick();
 		}
+	} catch(AtomicQueue<DaySpread>::QueueEndException&){
+		counter.stop();
+		m_msgQueue->enqueue(Message(OUTPUT_WRITER, "Finished !"));
 	}
 }
 
 template<>
 void OutputWriter<Observation>::save(){
-	while(!m_inputQueue->end()){
-		if(m_inputQueue->empty()){
-			Sleep(25);
-		} else{
+	Counter counter;
+
+	counter.registerCallback([&](uint64_t countPerSec){
+		string msg = to_string(countPerSec) + " line/s";
+		if(m_inputQueue->empty()) msg += "\tstarving!";
+		m_msgQueue->enqueue(Message(OUTPUT_WRITER, msg));
+	});
+	counter.start();
+
+	try{
+		while(true){
 			Observation obs = m_inputQueue->dequeue();
 			m_ofs << *obs.symbol << "," << *obs.date << "," << *obs.time << ","
 				<< *obs.bid << "," << *obs.offer << "," << *obs.mode;
@@ -70,5 +90,8 @@ void OutputWriter<Observation>::save(){
 			m_ofs << endl;
 			obs.deleteAll();
 		}
+	} catch(AtomicQueue<DaySpread>::QueueEndException&){
+		counter.stop();
+		m_msgQueue->enqueue(Message(OUTPUT_WRITER, "Finished !"));
 	}
 }
