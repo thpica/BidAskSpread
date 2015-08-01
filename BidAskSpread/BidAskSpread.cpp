@@ -67,25 +67,20 @@ int main(int argc, char* argv[]){
 
 	threads.push_back(thread([&](){
 		RelSpreadProcessor(outliersFilteredQueue, relSpreadQueue, msgQueue)();
-		cout << "RelSpreadProcessor finished" << endl;
 	}));
 
 	threads.push_back(thread([&](){
 		DayRelSpreadProcessor(relSpreadQueue, dayRelSpreadQueue, msgQueue)();
-		cout << "DayRelSpreadProcessor finished" << endl;
 	}));
 
 	threads.push_back(thread([&](){
 		OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue, msgQueue)();
-		cout << "OutputWriter finished" << endl;
 	}));
 
 	for_each(threads.begin(), threads.end(), [](thread& t){
 		if(t.joinable())
 			t.join();
 	});
-
-	cout << "Finished !" << endl;
 
 	msgOutput->shutdown();
 	msgOutputThread.join();
