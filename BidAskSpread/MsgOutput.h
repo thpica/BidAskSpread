@@ -30,7 +30,7 @@ private:
 				m_table[msg.sender] = msg.text;
 				printTable();
 			} else
-				this_thread::yield();
+				this_thread::sleep_for(milliseconds(250));
 		}
 	}
 

@@ -3,6 +3,8 @@
 #include <exception>
 #include <atomic>
 #include <cstdint>
+#include <chrono>
+using namespace std::chrono;
 #include "readerwriterqueue.h"
 using namespace moodycamel;
 
@@ -63,7 +65,7 @@ public:
 			if(end())
 				throw QueueEndException();
 			m_empty = true;
-			this_thread::yield();
+			this_thread::sleep_for(milliseconds(10));
 		}
 		m_empty = false;
 		return elem;
@@ -72,7 +74,7 @@ public:
 	void enqueue(T&& elem){
 		while(!m_queue.try_enqueue(elem)){
 			m_full = true;
-			this_thread::yield();
+			this_thread::sleep_for(milliseconds(10));
 		}
 		m_full = false;
 	}
