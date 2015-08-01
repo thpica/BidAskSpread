@@ -51,7 +51,8 @@ void OutliersFilter::filter(){
 }
 
 void OutliersFilter::removeDayOutliers(Counter& counter){
-	const int windowSize = 1801;
+	const int windowSize = 51;
+	const int constantS = 0.1;
 	vector<size_t> deleteFlags;
 
 	//filter
@@ -65,8 +66,8 @@ void OutliersFilter::removeDayOutliers(Counter& counter){
 			window.set(i - ((windowSize - 1) / 2), i + ((windowSize - 1) / 2), ((windowSize - 1) / 2));
 
 		Stats stats = computeContextStats(window);
-		if(abs(*m_buffer[i].bid - stats.bid.trimmedMean) >(3 * stats.bid.sd + 0.5) ||
-			abs(*m_buffer[i].offer - stats.offer.trimmedMean) > (3 * stats.offer.sd + 0.5))
+		if(abs(*m_buffer[i].bid - stats.bid.trimmedMean) >(3 * stats.bid.sd + constantS) ||
+			abs(*m_buffer[i].offer - stats.offer.trimmedMean) > (3 * stats.offer.sd + constantS))
 		{
 			deleteFlags.push_back(i);
 		}
