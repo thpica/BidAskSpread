@@ -1,9 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <numeric>
-#include <utility>
-#include <iostream>
 
 using namespace std;
 
