@@ -16,6 +16,9 @@
     <Filter Include="Source Files\lib">
       <UniqueIdentifier>{0315ef59-5565-4f00-b316-58f0932b7dca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Abstract Classes">
+      <UniqueIdentifier>{10d39cb0-2604-4b04-ba2a-6631227c89f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BidAskSpread.cpp">
@@ -44,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Filter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DataStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RelSpreadProcessor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Callable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OutliersFilter.h">
@@ -88,6 +85,12 @@
     </ClInclude>
     <ClInclude Include="StreamParser.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>Header Files\Abstract Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Callable.h">
+      <Filter>Header Files\Abstract Classes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
