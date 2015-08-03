@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+using namespace std::chrono;
 #include "Callable.h"
 #include "DataStructures.h"
 #include "Counter.h"
@@ -62,6 +64,7 @@ void OutputWriter<DaySpread>::save(){
 			m_ofs << *ds.symbol << "," << *ds.date << "," << *ds.relSpread << endl;
 			ds.deleteAll();
 			counter.tick();
+			this_thread::sleep_for(milliseconds(250));
 		}
 	} catch(AtomicQueue<DaySpread>::QueueEndException&){
 		counter.stop();
@@ -89,6 +92,8 @@ void OutputWriter<Observation>::save(){
 				m_ofs << "," << *obs.relSpread;
 			m_ofs << endl;
 			obs.deleteAll();
+			counter.tick();
+			this_thread::sleep_for(milliseconds(250));
 		}
 	} catch(AtomicQueue<DaySpread>::QueueEndException&){
 		counter.stop();
