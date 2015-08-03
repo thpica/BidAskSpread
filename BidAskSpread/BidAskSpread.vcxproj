@@ -313,7 +313,6 @@
     <ClInclude Include="Callable.h" />
     <ClInclude Include="StreamParser.h" />
     <ClInclude Include="TimestampMergeFilter.h" />
-    <ClInclude Include="MemoryMappedHelper.h" />
     <ClInclude Include="DataStructures.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
