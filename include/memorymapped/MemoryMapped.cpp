@@ -13,6 +13,7 @@
 #ifdef _MSC_VER
 // Windows
 #include <windows.h>
+#include <VersionHelpers.h>
 #else
 // Linux
 // enable large file support on 32 bit systems
@@ -295,6 +296,13 @@ bool MemoryMapped::remap(uint64_t offset, size_t mappedBytes)
     _mappedBytes = 0;
     _mappedView  = NULL;
     return false;
+  }
+
+  if(IsWindows8OrGreater()){
+	  WIN32_MEMORY_RANGE_ENTRY entry;
+	  entry.VirtualAddress = (PVOID)_mappedFile;
+	  entry.NumberOfBytes = _mappedBytes;
+	  PrefetchVirtualMemory(GetCurrentProcess(), 1, &entry, 0);
   }
 
   return true;
