@@ -65,7 +65,7 @@ public:
 			if(end())
 				throw QueueEndException();
 			m_empty = true;
-			this_thread::sleep_for(milliseconds(10));
+			this_thread::sleep_for(milliseconds(25));
 		}
 		m_empty = false;
 		return elem;
@@ -74,7 +74,7 @@ public:
 	void enqueue(T&& elem){
 		while(!m_queue.try_enqueue(elem)){
 			m_full = true;
-			this_thread::sleep_for(milliseconds(10));
+			this_thread::sleep_for(milliseconds(25));
 		}
 		m_full = false;
 	}
