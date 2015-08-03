@@ -27,4 +27,6 @@ private:
 	const string m_filepath;
 	virtual void run();
 	void parse();
+	unsigned char* parseUChar(const char* ptr) const;
+	float* parseFloat(const char* ptr) const;
 };

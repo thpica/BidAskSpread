@@ -21,10 +21,10 @@ inline void RelSpreadProcessor::filter(){
 
 	try{
 		while(true){
-			long double* relSpread = nullptr;
+			double* relSpread = nullptr;
 			Observation obs = m_inputQueue->dequeue(); //poll obs
 
-			relSpread = new long double((2 * ((long double)*obs.offer - (long double)*obs.bid) / ((long double)*obs.offer + (long double)*obs.bid)));
+			relSpread = new double((2 * ((double)*obs.offer - (double)*obs.bid) / ((double)*obs.offer + (double)*obs.bid)));
 			if(*relSpread >= 0){
 				obs.relSpread = relSpread;
 				m_outputQueue->enqueue(move(obs));

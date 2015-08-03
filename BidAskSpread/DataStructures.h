@@ -11,7 +11,7 @@ struct Observation{
 	Observation(const string* _symbol = nullptr,const string* _date = nullptr,
 				const string* _time = nullptr,	const float* _offer = nullptr,
 				const float* _bid = nullptr, const unsigned char* _mode = nullptr,
-				long double* _relspread = nullptr):
+				double* _relspread = nullptr):
 		symbol(_symbol), date(_date), time(_time),
 		offer(_offer), bid(_bid), mode(_mode), relSpread(_relspread)
 	{}
@@ -38,7 +38,7 @@ struct Observation{
 	const float* offer;
 	const float* bid;
 	const unsigned char* mode;
-	long double* relSpread;
+	double* relSpread;
 };
 
 struct DaySpread{
@@ -46,7 +46,7 @@ struct DaySpread{
 	symbol(nullptr), date(nullptr), relSpread(nullptr)
 	{}
 
-	DaySpread(const string* smb, const string* dt, const long double* sprd):
+	DaySpread(const string* smb, const string* dt, const double* sprd):
 	symbol(smb),
 	date(dt),
 	relSpread(sprd)
@@ -59,7 +59,7 @@ struct DaySpread{
 
 	const string* symbol;
 	const string* date;
-	const long double* relSpread;
+	const double* relSpread;
 };
 
 enum Sender{

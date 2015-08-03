@@ -27,6 +27,9 @@ void StreamParser::parse(){
 		if(m_queue->full()) msg += "\tblocked!";
 		m_msgQueue->enqueue(Message(PARSER, msg));
 	});
+
+	char test[] = "12.25";
+	float* testp = parseFloat(test);
 	
 	mstream.seekg(30); //skip headers
 	counter.start();
@@ -40,14 +43,14 @@ void StreamParser::parse(){
 				else
 					throw std::exception("Parse error (line)");
 			}
-			for(unsigned short i = 0; i < 6; i++){
+			for(unsigned short i = 0; i < 6; ++i){
 				cells[i] = (i == 0) ? strtok(line, ",") : strtok(NULL, ",");
 				if(cells[i] == nullptr)
 					throw std::exception("Parse error (tokens)");
 			}
-			const float* bid = new float(atof(cells[3]));
-			const float* offer = new float(atof(cells[4]));
-			const unsigned char* mode = new const unsigned char(atoi(cells[5]));
+			const float* bid = parseFloat(cells[3]);
+			const float* offer = parseFloat(cells[4]);
+			const unsigned char* mode = parseUChar(cells[5]);
 			if(*bid > 0.01 && *offer > 0.01 && *mode == 12){
 				const string* symbol = new string(cells[0]);
 				const string* date = new string(cells[1]);
@@ -82,4 +85,30 @@ void StreamParser::parse(){
 		counter.stop();
 		m_msgQueue->enqueue(Message(PARSER, string("Exception: ") + e.what()));
 	}
+}
+
+unsigned char* StreamParser::parseUChar(const char* ptr) const {
+	unsigned char* x = new unsigned char(0);
+	while(*ptr >= '0' && *ptr <= '9') {
+		*x = (*x * 10) + (*ptr - '0');
+		++ptr;
+	}
+	return x;
+}
+
+float* StreamParser::parseFloat(const char* ptr) const {
+	float* x = new float(0);
+	bool afterComma = false;
+	while((*ptr >= '0' && *ptr <= '9') || *ptr == '.'){
+		if(*ptr == '.'){
+			afterComma = true;
+		} else{
+			if(!afterComma)
+				*x = (*x * 10) + (*ptr - '0');
+			else
+				*x += (float)(*ptr - '0') / 10;
+		}
+		++ptr;
+	}
+	return x;
 }

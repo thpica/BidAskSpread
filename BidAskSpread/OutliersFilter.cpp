@@ -96,12 +96,12 @@ OutliersFilter::Stats OutliersFilter::computeContextStats(Interval window){
 	sort(sortedContextOffers.begin(), sortedContextOffers.end());
 	
 	result.bid.mean = StatsUtils::mean(sortedContextBids);
-	result.bid.trimmedMean = StatsUtils::trimmedMean(sortedContextBids, 0.1);
+	result.bid.trimmedMean = StatsUtils::trimmedMean(sortedContextBids, (float)0.1);
 	result.bid.median = StatsUtils::median(sortedContextBids);
 	result.bid.sd = StatsUtils::sampleSD(sortedContextBids, result.bid.mean);
 
 	result.offer.mean = StatsUtils::mean(sortedContextOffers);
-	result.offer.trimmedMean = StatsUtils::trimmedMean(sortedContextOffers, 0.1);
+	result.offer.trimmedMean = StatsUtils::trimmedMean(sortedContextOffers, (float)0.1);
 	result.offer.median = StatsUtils::median(sortedContextOffers);
 	result.offer.sd = StatsUtils::sampleSD(sortedContextOffers, result.offer.mean);
 	
