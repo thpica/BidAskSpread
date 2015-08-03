@@ -10,7 +10,7 @@ using namespace moodycamel;
 struct Observation{
 	Observation(const string* _symbol = nullptr,const string* _date = nullptr,
 				const string* _time = nullptr,	const float* _offer = nullptr,
-				const float* _bid = nullptr, const unsigned short* _mode = nullptr,
+				const float* _bid = nullptr, const unsigned char* _mode = nullptr,
 				long double* _relspread = nullptr):
 		symbol(_symbol), date(_date), time(_time),
 		offer(_offer), bid(_bid), mode(_mode), relSpread(_relspread)
@@ -37,7 +37,7 @@ struct Observation{
 	const string* time;
 	const float* offer;
 	const float* bid;
-	const unsigned short* mode;
+	const unsigned char* mode;
 	long double* relSpread;
 };
 

@@ -47,7 +47,7 @@ void StreamParser::parse(){
 			}
 			const float* bid = new float(atof(cells[3]));
 			const float* offer = new float(atof(cells[4]));
-			const unsigned short* mode = new const unsigned short(atoi(cells[5]));
+			const unsigned char* mode = new const unsigned char(atoi(cells[5]));
 			if(*bid > 0.01 && *offer > 0.01 && *mode == 12){
 				const string* symbol = new string(cells[0]);
 				const string* date = new string(cells[1]);
