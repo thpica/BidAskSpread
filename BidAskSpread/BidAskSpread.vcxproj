@@ -293,9 +293,9 @@
     <ClCompile Include="BidAskSpread.cpp" />
     <ClCompile Include="Counter.cpp" />
     <ClCompile Include="DayRelSpreadProcessor.cpp" />
-    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="RelSpreadProcessor.cpp" />
     <ClCompile Include="OutliersFilter.cpp" />
+    <ClCompile Include="StreamParser.cpp" />
     <ClCompile Include="TimestampMergeFilter.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -303,14 +303,15 @@
     <ClInclude Include="ClearScreen.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="DayRelSpreadProcessor.h" />
+    <ClInclude Include="MemoryMappedStreamBuf.h" />
     <ClInclude Include="MsgOutput.h" />
-    <ClInclude Include="Parser.h" />
     <ClInclude Include="StatsUtils.h" />
     <ClInclude Include="RelSpreadProcessor.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="OutliersFilter.h" />
     <ClInclude Include="OutputWriter.h" />
     <ClInclude Include="Callable.h" />
+    <ClInclude Include="StreamParser.h" />
     <ClInclude Include="TimestampMergeFilter.h" />
     <ClInclude Include="MemoryMappedHelper.h" />
     <ClInclude Include="DataStructures.h" />

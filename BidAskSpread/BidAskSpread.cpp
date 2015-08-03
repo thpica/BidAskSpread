@@ -10,7 +10,7 @@
 #include "concurrentqueue.h"
 #include "DataStructures.h"
 #include "TimestampMergeFilter.h"
-#include "Parser.h"
+#include "StreamParser.h"
 #include "RelSpreadProcessor.h"
 #include "DayRelSpreadProcessor.h"
 #include "OutliersFilter.h"
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]){
 	});
 
 	threads.push_back(thread([&](){
-		Parser(string(argv[1]), parsedQueue, msgQueue)();
+		StreamParser(string(argv[1]), parsedQueue, msgQueue)();
 	}));
 
 	threads.push_back(thread([&](){
@@ -91,8 +91,9 @@ int main(int argc, char* argv[]){
 
 #ifdef _DEBUG
 	_CrtDumpMemoryLeaks();
+	
+#endif //_DEBUG
 	cout << "Press any key to exit" << endl;
 	getchar();
-#endif //_DEBUG
 	return 0;
 }

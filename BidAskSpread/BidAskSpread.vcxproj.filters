@@ -33,13 +33,13 @@
     <ClCompile Include="DayRelSpreadProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\include\memorymapped\MemoryMapped.cpp">
       <Filter>Source Files\lib</Filter>
     </ClCompile>
     <ClCompile Include="Counter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,9 +77,6 @@
     <ClInclude Include="StatsUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MsgOutput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ClearScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryMappedStreamBuf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
