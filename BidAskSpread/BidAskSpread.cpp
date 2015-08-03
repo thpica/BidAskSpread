@@ -91,9 +91,8 @@ int main(int argc, char* argv[]){
 
 #ifdef _DEBUG
 	_CrtDumpMemoryLeaks();
-	
-#endif //_DEBUG
 	cout << "Press any key to exit" << endl;
 	getchar();
+#endif //_DEBUG
 	return 0;
 }
