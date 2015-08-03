@@ -24,13 +24,15 @@ private:
 	map<Sender, string> m_table;
 
 	void run(){
-		while(!m_shutdown){
+		while(true){
 			Message msg;
 			if(m_msgQueue->try_dequeue(msg)){
 				m_table[msg.sender] = msg.text;
 				printTable();
-			} else
+			} else if(!m_shutdown.load())
 				this_thread::sleep_for(milliseconds(250));
+			else
+				break;
 		}
 	}
 
