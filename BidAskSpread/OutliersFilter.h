@@ -47,6 +47,8 @@ public:
 
 private:
 	vector<Observation> m_buffer;
+	vector<float> m_sortedContextBids;
+	vector<float> m_sortedContextOffers;
 	void removeDayOutliers(Counter& counter);
 	virtual void filter();
 	Stats computeContextStats(Interval window);

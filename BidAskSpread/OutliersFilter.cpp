@@ -3,7 +3,12 @@
 
 OutliersFilter::OutliersFilter(ObsQueue* in, ObsQueue* out, MsgQueue* msg):
 	Filter(in, out, msg)
-{}
+{
+	//reserving 7h with one obs per sec
+	m_buffer.reserve(25200);
+	m_sortedContextBids.reserve(25200);
+	m_sortedContextOffers.reserve(25200);
+}
 
 void OutliersFilter::filter(){
 	Counter counter;
@@ -82,28 +87,28 @@ void OutliersFilter::removeDayOutliers(Counter& counter){
 
 OutliersFilter::Stats OutliersFilter::computeContextStats(Interval window){
 	Stats result;
-
-	vector<float> sortedContextBids;
-	vector<float> sortedContextOffers;
 	for(int i = 0; i < window.size() && i < m_buffer.size(); i++){
 		if(i != window.current){
-			sortedContextBids.push_back(*m_buffer.at(window.low + i).bid);
-			sortedContextOffers.push_back(*m_buffer.at(window.low + i).offer);
+			m_sortedContextBids.push_back(*m_buffer.at(window.low + i).bid);
+			m_sortedContextOffers.push_back(*m_buffer.at(window.low + i).offer);
 		}
 	}
 
-	sort(sortedContextBids.begin(), sortedContextBids.end());
-	sort(sortedContextOffers.begin(), sortedContextOffers.end());
+	sort(m_sortedContextBids.begin(), m_sortedContextBids.end());
+	sort(m_sortedContextOffers.begin(), m_sortedContextOffers.end());
 	
-	result.bid.mean = StatsUtils::mean(sortedContextBids);
-	result.bid.trimmedMean = StatsUtils::trimmedMean(sortedContextBids, (float)0.1);
-	result.bid.median = StatsUtils::median(sortedContextBids);
-	result.bid.sd = StatsUtils::sampleSD(sortedContextBids, result.bid.mean);
+	result.bid.mean = StatsUtils::mean(m_sortedContextBids);
+	result.bid.trimmedMean = StatsUtils::trimmedMean(m_sortedContextBids, (float)0.1);
+	result.bid.median = StatsUtils::median(m_sortedContextBids);
+	result.bid.sd = StatsUtils::sampleSD(m_sortedContextBids, result.bid.mean);
 
-	result.offer.mean = StatsUtils::mean(sortedContextOffers);
-	result.offer.trimmedMean = StatsUtils::trimmedMean(sortedContextOffers, (float)0.1);
-	result.offer.median = StatsUtils::median(sortedContextOffers);
-	result.offer.sd = StatsUtils::sampleSD(sortedContextOffers, result.offer.mean);
+	result.offer.mean = StatsUtils::mean(m_sortedContextOffers);
+	result.offer.trimmedMean = StatsUtils::trimmedMean(m_sortedContextOffers, (float)0.1);
+	result.offer.median = StatsUtils::median(m_sortedContextOffers);
+	result.offer.sd = StatsUtils::sampleSD(m_sortedContextOffers, result.offer.mean);
+
+	m_sortedContextBids.clear();
+	m_sortedContextOffers.clear();
 	
 	return result;
 }
