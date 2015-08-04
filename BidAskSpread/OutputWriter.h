@@ -93,7 +93,6 @@ void OutputWriter<Observation>::save(){
 			m_ofs << endl;
 			obs.deleteAll();
 			counter.tick();
-			this_thread::sleep_for(milliseconds(250));
 		}
 	} catch(AtomicQueue<DaySpread>::QueueEndException&){
 		counter.stop();
