@@ -64,7 +64,6 @@ void OutputWriter<DaySpread>::save(){
 			m_ofs << *ds.symbol << "," << *ds.date << "," << *ds.relSpread << endl;
 			ds.deleteAll();
 			counter.tick();
-			this_thread::sleep_for(milliseconds(250));
 		}
 	} catch(AtomicQueue<DaySpread>::QueueEndException&){
 		counter.stop();
