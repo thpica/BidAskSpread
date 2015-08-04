@@ -5,6 +5,7 @@
 #include <numeric>
 #include <vector>
 #include <thread>
+#include <cstring>
 
 #include "AtomicQueue.h"
 #include "concurrentqueue.h"
@@ -30,31 +31,24 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]){
-	if(argc != 2){
-		cout << "Usage: BidAskSpread [input_filename]" << endl;
-		return 1;
-	}
-
+void processFile(char* filename){
 	ConcurrentQueue<Message>* msgQueue = new ConcurrentQueue<Message>();
-
 	AtomicQueue<Observation>* parsedQueue = new AtomicQueue<Observation>();
 	AtomicQueue<Observation>* timestampMergedQueue = new AtomicQueue<Observation>();
 	AtomicQueue<Observation>* outliersFilteredQueue = new AtomicQueue<Observation>();
 	AtomicQueue<Observation>* relSpreadQueue = new AtomicQueue<Observation>();
 	AtomicQueue<DaySpread>* dayRelSpreadQueue = new AtomicQueue<DaySpread>();
-
 	vector<thread> threads;
 
 	MsgOutput* msgOutput = nullptr;
 
 	thread msgOutputThread([&](){
-		msgOutput = new MsgOutput(argv[1], msgQueue);
+		msgOutput = new MsgOutput(filename, msgQueue);
 		msgOutput->operator()();
 	});
 
 	threads.push_back(thread([&](){
-		StreamParser(string(argv[1]), parsedQueue, msgQueue)();
+		StreamParser(filename, parsedQueue, msgQueue)();
 	}));
 
 	threads.push_back(thread([&](){
@@ -74,7 +68,7 @@ int main(int argc, char* argv[]){
 	}));
 
 	threads.push_back(thread([&](){
-		OutputWriter<DaySpread>(string(argv[1]) + ".processed.csv", dayRelSpreadQueue, msgQueue)();
+		OutputWriter<DaySpread>(string(filename) + ".processed.csv", dayRelSpreadQueue, msgQueue)();
 	}));
 
 	for_each(threads.begin(), threads.end(), [](thread& t){
@@ -85,9 +79,24 @@ int main(int argc, char* argv[]){
 	msgOutput->shutdown();
 	msgOutputThread.join();
 
-	delete parsedQueue;	delete timestampMergedQueue; 
+	delete parsedQueue;	delete timestampMergedQueue;
 	delete outliersFilteredQueue; delete relSpreadQueue;
 	delete dayRelSpreadQueue; delete msgQueue;
+}
+
+int main(int argc, char* argv[]){
+	if(argc < 2){
+		cout << "Usage: BidAskSpread [input_filename]" << endl;
+		return 1;
+	} else if(argc == 2 && (argv[1] == "/?" || argv[1] == "/help" || argv[1] == "help" || argv[1] == "-h")){
+		cout << "Usage: BidAskSpread [input_filename]" << endl;
+		return 1;
+	}
+
+	for(int i = 1; i < argc; ++i){
+		if(strstr(argv[i], "processed.csv") == nullptr)
+			processFile(argv[i]);
+	}
 
 #ifdef _DEBUG
 	_CrtDumpMemoryLeaks();
