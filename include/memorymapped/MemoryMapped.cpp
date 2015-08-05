@@ -262,7 +262,7 @@ bool MemoryMapped::remap(uint64_t offset, size_t mappedBytes)
     return false;
 
   if (mappedBytes == WholeFile)
-    mappedBytes = _filesize;
+    mappedBytes = static_cast<size_t>(_filesize);
 
   // close old mapping
   if (_mappedView)

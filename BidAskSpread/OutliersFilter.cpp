@@ -33,7 +33,7 @@ void OutliersFilter::filter(){
 			} else{
 				removeDayOutliers(counter);
 				//push buffer to output queue
-				for(int i = 0; i < m_buffer.size(); i++){
+				for(unsigned i = 0; i < m_buffer.size(); i++){
 					if(m_buffer[i].symbol != nullptr)
 						m_outputQueue->enqueue(move(m_buffer.at(i)));
 				}
@@ -44,7 +44,7 @@ void OutliersFilter::filter(){
 	} catch(ObsQueue::QueueEndException&){
 		if(!m_buffer.empty()){
 			removeDayOutliers(counter);
-			for(int i = 0; i < m_buffer.size(); i++){
+			for(unsigned i = 0; i < m_buffer.size(); i++){
 				if(m_buffer[i].symbol != nullptr)
 					m_outputQueue->enqueue(move(m_buffer.at(i)));
 			}
@@ -79,7 +79,7 @@ void OutliersFilter::removeDayOutliers(Counter& counter){
 	}
 
 	//clean buffer
-	for(int i = 0; i < deleteFlags.size(); i++){
+	for(unsigned i = 0; i < deleteFlags.size(); i++){
 		m_buffer[deleteFlags[i]].deleteAll();
 	}
 	deleteFlags.clear();
@@ -87,7 +87,7 @@ void OutliersFilter::removeDayOutliers(Counter& counter){
 
 OutliersFilter::Stats OutliersFilter::computeContextStats(Interval window){
 	Stats result;
-	for(int i = 0; i < window.size() && i < m_buffer.size(); i++){
+	for(unsigned i = 0; i < window.size() && i < m_buffer.size(); i++){
 		if(i != window.current){
 			m_sortedContextBids.push_back(*m_buffer.at(window.low + i).bid);
 			m_sortedContextOffers.push_back(*m_buffer.at(window.low + i).offer);
