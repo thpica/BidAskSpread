@@ -57,13 +57,13 @@ void DayRelSpreadProcessor::process(){
 		}
 	} catch(ObsQueue::QueueEndException&){
 		if(!m_buffer.empty()){
-			m_outputQueue->enqueue(DaySpread(m_buffer[0].symbol, m_buffer[0].date,	mean(m_buffer)));
+			m_outputQueue->enqueue(DaySpread(m_buffer[0].symbol, m_buffer[0].date, mean(m_buffer)));
 			counter.tick();
 			cleanBuffer();
 		}
-		m_outputQueue->setQueueEnd();
 		counter.stop();
 		m_msgQueue->enqueue(Message(DAY_RELSPREAD_PROCESSOR, "Finished !"));
+		m_outputQueue->setQueueEnd();
 	}
 }
 

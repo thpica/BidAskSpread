@@ -36,8 +36,8 @@ void TimestampMergeFilter::filter(){
 			counter.stop();
 			m_buffer.clear();
 		}
-		m_outputQueue->setQueueEnd();
 		m_msgQueue->enqueue(Message(TIMESTAMP_MERGE_FILTER, "Finished !"));
+		m_outputQueue->setQueueEnd();
 	}
 }
 

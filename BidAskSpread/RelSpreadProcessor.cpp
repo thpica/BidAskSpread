@@ -36,7 +36,7 @@ inline void RelSpreadProcessor::filter(){
 		}
 	} catch(ObsQueue::QueueEndException&){
 		counter.stop();
-		m_outputQueue->setQueueEnd();
 		m_msgQueue->enqueue(Message(RELSPREAD_PROCESSOR, "Finished !"));
+		m_outputQueue->setQueueEnd();
 	}
 }

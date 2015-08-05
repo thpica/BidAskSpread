@@ -81,9 +81,9 @@ void StreamParser::parse(){
 		counter.stop();
 		m_msgQueue->enqueue(Message(PARSER, "Finished !"));
 	} catch(exception& e){
-		m_queue->setQueueEnd();
 		counter.stop();
 		m_msgQueue->enqueue(Message(PARSER, string("Exception: ") + e.what()));
+		m_queue->setQueueEnd();
 	}
 }
 
