@@ -34,11 +34,11 @@ using namespace std;
 
 void processFile(char* filename){
 	ConcurrentQueue<Message>* msgQueue = new ConcurrentQueue<Message>();
-	AtomicQueue<Observation>* parsedQueue = new AtomicQueue<Observation>();
-	AtomicQueue<Observation>* timestampMergedQueue = new AtomicQueue<Observation>();
-	AtomicQueue<Observation>* outliersFilteredQueue = new AtomicQueue<Observation>();
-	AtomicQueue<Observation>* relSpreadQueue = new AtomicQueue<Observation>();
-	AtomicQueue<DaySpread>* dayRelSpreadQueue = new AtomicQueue<DaySpread>();
+	AtomicQueue<Observation>* parsedQueue = new AtomicQueue<Observation>(30000);
+	AtomicQueue<Observation>* timestampMergedQueue = new AtomicQueue<Observation>(30000);
+	AtomicQueue<Observation>* outliersFilteredQueue = new AtomicQueue<Observation>(30000);
+	AtomicQueue<Observation>* relSpreadQueue = new AtomicQueue<Observation>(30000);
+	AtomicQueue<DaySpread>* dayRelSpreadQueue = new AtomicQueue<DaySpread>(30000);
 	vector<thread> threads;
 
 	MsgOutput* msgOutput = nullptr;
