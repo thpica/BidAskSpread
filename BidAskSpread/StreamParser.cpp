@@ -77,9 +77,9 @@ void StreamParser::parse(){
 				delete mode;
 			}
 		}
-		m_queue->setQueueEnd();
 		counter.stop();
 		m_msgQueue->enqueue(Message(PARSER, "Finished !"));
+		m_queue->setQueueEnd();
 	} catch(exception& e){
 		counter.stop();
 		m_msgQueue->enqueue(Message(PARSER, string("Exception: ") + e.what()));
