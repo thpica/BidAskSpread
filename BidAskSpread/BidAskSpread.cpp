@@ -19,12 +19,13 @@
 #include "MsgOutput.h"
 //DEBUG
 
-#define _CRTDBG_MAP_ALLOC
+
 #ifdef _DEBUG
+	#define _CRTDBG_MAP_ALLOC
 	#ifndef DBG_NEW
 		#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 		#define new DBG_NEW
-	#endif
+	#endif // DBG_NEW
 	#include <stdlib.h>
 	#include <crtdbg.h>
 #endif  // _DEBUG
@@ -63,6 +64,7 @@ void processFile(char* filename){
 		RelSpreadProcessor(outliersFilteredQueue, relSpreadQueue, msgQueue)();
 	}));
 
+
 	threads.push_back(thread([&](){
 		DayRelSpreadProcessor(relSpreadQueue, dayRelSpreadQueue, msgQueue)();
 	}));
@@ -84,12 +86,25 @@ void processFile(char* filename){
 	delete dayRelSpreadQueue; delete msgQueue;
 }
 
+void pauseIfDebug(){
+#ifdef _DEBUG
+	cout << "Press any key to exit" << endl;
+	getchar();
+#endif //_DEBUG
+}
+
 int main(int argc, char* argv[]){
+	const char helpMsg[] = "Usage: \n"\
+		"BidAskSpread input_filename_1 [input_filename_2] [...]\n"\
+		"Wildcards (*.csv or ?.csv) and will exclude *.processed.csv";
 	if(argc < 2){
-		cout << "Usage: BidAskSpread [input_filename]" << endl;
+		cout << helpMsg << endl;
+		pauseIfDebug();
 		return 1;
-	} else if(argc == 2 && (argv[1] == "/?" || argv[1] == "/help" || argv[1] == "help" || argv[1] == "-h")){
-		cout << "Usage: BidAskSpread [input_filename]" << endl;
+	} else if(argc == 2 && (strcmp(argv[1], "/?") == 0 || strcmp(argv[1], "/help") == 0 ||
+			  strcmp(argv[1], "help") == 0 || strcmp(argv[1], "-h") == 0)){
+		cout << helpMsg << endl;
+		pauseIfDebug();
 		return 1;
 	}
 
@@ -98,10 +113,6 @@ int main(int argc, char* argv[]){
 			processFile(argv[i]);
 	}
 
-#ifdef _DEBUG
-	_CrtDumpMemoryLeaks();
-	cout << "Press any key to exit" << endl;
-	getchar();
-#endif //_DEBUG
+	pauseIfDebug();
 	return 0;
 }
