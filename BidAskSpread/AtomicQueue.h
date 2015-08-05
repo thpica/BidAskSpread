@@ -14,7 +14,7 @@ template<typename T>
 class AtomicQueue
 {
 public:
-	AtomicQueue(uint64_t queue_size = 25000): //25K queue max size
+	AtomicQueue(size_t queue_size = 5000): //5K default queue max size
 		m_atEnd(false),
 		m_full(false),
 		m_queue(queue_size){}
