@@ -29,10 +29,16 @@ private:
 			if(m_msgQueue->try_dequeue(msg)){
 				m_table[msg.sender] = msg.text;
 				printTable();
-			} else if(!m_shutdown.load())
+			} else if(!m_shutdown.load()){
 				this_thread::sleep_for(milliseconds(250));
-			else
+			} else{
+				this_thread::sleep_for(milliseconds(250));
+				while(m_msgQueue->try_dequeue(msg)){
+					m_table[msg.sender] = msg.text;
+					printTable();
+				}
 				break;
+			}
 		}
 	}
 
@@ -46,4 +52,3 @@ private:
 		}
 	}
 };
-
